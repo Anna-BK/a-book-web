@@ -1,3 +1,39 @@
+html {
+  box-sizing: border-box;
+}
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
 .container {
   width: 100%;
+  background-color: beige;
+}
+
+#nav_snb {
+  width: 20%;
+}
+
+
+
+ul {
+  list-style: none;
+}
+
+.list_menu {
+  background-color: #202020;
+  color: #d9d9d9;
+}
+
+.list_menu ul {
+  padding: 15px 0;
+}
+
+.list_menu ul li {
+  padding: 10px;
+}
+
+.list_menu ul .active {
+  background-color: #42be6f;
+  color: white;
 }
