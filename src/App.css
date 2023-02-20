@@ -31,6 +31,7 @@ ul {
 
 .list_menu ul li {
   padding: 10px;
+  cursor: pointer;
 }
 
 .naver_theme ul .active {
@@ -81,5 +82,6 @@ ul {
 }
 
 #profile_layer ul li {
-  padding: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
 }

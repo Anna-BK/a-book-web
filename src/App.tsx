@@ -14,8 +14,8 @@ function App() {
               </a>
               <div id="profile_layer" className="naver_theme">
               <ul>
-                <li className="active">Settings</li>
-                <li>Logout</li>
+                <li className="active"><a>Settings</a></li>
+                <li><a>Logout</a></li>
               </ul>
               </div>
             </div>
@@ -25,8 +25,8 @@ function App() {
         <nav id="nav_snb">
           <div className="list_menu naver_theme">
             <ul>
-              <li className="active">Active Menu</li>
-              <li>Inactive Menu</li>
+              <li className="active"><a>Active Menu</a></li>
+              <li><a>Inactive Menu</a></li>
             </ul>
           </div>
 
