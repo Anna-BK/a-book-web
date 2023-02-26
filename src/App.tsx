@@ -22,7 +22,7 @@ function App() {
         </div>
       </header>
       <div className="container">
-        <nav id="nav_snb" className='container_item'>
+        <nav id="nav_snb">
           <div className="list_menu naver_theme">
             <ul>
               <li className="active"><a>Active Menu</a></li>
@@ -30,9 +30,29 @@ function App() {
             </ul>
           </div>
         </nav>
-        <main className='container_item'>
+        <main>
+          <div id='content_wrapper'>
             <div id="content">
-              <div id="content_header"><h3>타이틀</h3></div>
+              <div id="content_header"></div>
+              <div id="content_body">
+                <div id="grid_container">
+                    <div id="grid_header"></div>
+                    <div id="grid">
+                      <table>
+                        <thead></thead>
+                        <tbody>
+                          <tr>
+                            <td>1</td>
+                            <td>복이누나</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div id="grid_footer"></div>
+                </div>
+              </div>
+              <div id="content_footer"></div>
+            </div>
             </div>
         </main>
       </div>

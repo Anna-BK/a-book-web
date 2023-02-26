@@ -8,12 +8,15 @@ html {
 .container {
   width: 100%;
   background-color: beige;
+  display: flow-root;
 }
 
 #nav_snb {
   width: 219px;
   position: relative;
   top: 0;
+  float: left;
+  margin-right: 20px;
 }
 
 
@@ -25,6 +28,10 @@ ul {
 .naver_theme {
   background-color: #202020;
   color: #d9d9d9;
+}
+
+.list_menu {
+  margin-top: 51px;
 }
 
 .list_menu ul {
@@ -89,9 +96,19 @@ ul {
   cursor: pointer;
 }
 
-
 /* main */
 
-.container_item {
-  float: left;
+#content_wrapper {
+  margin-left: 219px;
+}
+
+#content_header {
+  height: 51px;
+  border-bottom: 1px solid #dcdcdc;
+}
+
+
+
+table {
+  border: 1px solid black;
 }
