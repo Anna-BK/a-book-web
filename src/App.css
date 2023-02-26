@@ -31,6 +31,7 @@ ul {
 }
 
 .list_menu {
+  height: 647px;
   margin-top: 51px;
 }
 
@@ -107,8 +108,37 @@ ul {
   border-bottom: 1px solid #dcdcdc;
 }
 
+#grid_wrapper {
+  padding: 30px;
+}
 
-
-table {
+.a_book_table {
+  width: 100%;
   border: 1px solid black;
+  background-color: white;
+}
+
+.a_book_table thead {
+  background-color: #dcdcdc;
+}
+
+.grid_header {
+  height: 35px;
+  background-color: white;
+  display: flex;
+  align-items: center;
+}
+
+.grid_title_wrapper {
+  flex : 8;
+  text-align: center;
+}
+
+.grid_header > div {
+  margin: 0 10px;
+}
+
+.grid_footer {
+  height: 35px;
+  background-color: white;
 }

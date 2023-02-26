@@ -34,26 +34,67 @@ function App() {
           <div id='content_wrapper'>
             <div id="content">
               <div id="content_header"></div>
-              <div id="content_body">
-                <div id="grid_container">
-                    <div id="grid_header"></div>
-                    <div id="grid">
-                      <table>
-                        <thead></thead>
+              <div id="content_body" style={{ height: '596px' }}>
+                <div id="grid_wrapper">
+                  {/* 하나의 가계부 그리드 */}
+                  <div className="grid_container">
+                    <div className="grid_header">
+                      <div className="grid_title_wrapper">
+                        <span>2023-02</span>
+                      </div>
+                      <div className="grid_menu_wrapper">
+                        <a href=''>more</a>
+                      </div>
+                    </div>
+                    <div className="grid">
+                      <table className="a_book_table">
+                        <thead>
+                          <th></th>
+                          <th>분류</th>
+                          <th>날짜</th>
+                          <th>제목</th>
+                          <th>비용</th>
+                          <th>수단</th>
+                          <th>구분</th>
+                        </thead>
                         <tbody>
                           <tr>
-                            <td>1</td>
-                            <td>복이누나</td>
+                            <td><input type={'checkbox'} /></td>
+                            <td>식비</td>
+                            <td>2023/2/19</td>
+                            <td>뱃살도둑 샐러드</td>
+                            <td>5,900</td>
+                            <td>현대카드</td>
+                            <td>#배민</td>
+                          </tr>
+                          <tr>
+                            <td><input type={'checkbox'} /></td>
+                            <td>고정비</td>
+                            <td>2023/2/22</td>
+                            <td>통신비</td>
+                            <td>72,600</td>
+                            <td>기업은행</td>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <td><input type={'checkbox'} /></td>
+                            <td>개인비</td>
+                            <td>2023/2/25</td>
+                            <td>축의금</td>
+                            <td>100,000</td>
+                            <td>기업은행</td>
+                            <td>#경조사</td>
                           </tr>
                         </tbody>
                       </table>
                     </div>
-                    <div id="grid_footer"></div>
+                    <div className="grid_footer"></div>
+                  </div>
                 </div>
               </div>
               <div id="content_footer"></div>
             </div>
-            </div>
+          </div>
         </main>
       </div>
     </div>
