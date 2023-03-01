@@ -34,7 +34,7 @@ function App() {
           <div id='content_wrapper'>
             <div id="content">
               <div id="content_header"></div>
-              <div id="content_body" style={{ height: '596px' }}>
+              <div id="content_body" >
                 <div id="grid_wrapper">
                   {/* 하나의 가계부 그리드 */}
                   <div className="grid_container">
@@ -100,7 +100,15 @@ function App() {
                   </div>
                 </div>
               </div>
-              <div id="content_footer"></div>
+              <div id="content_footer">
+                <div id="floating_bar_wrapper">
+                  <div id="floating_bar">
+                    <div></div>
+                    <div></div>
+                    <div id="delete_menu_wrap"><button>삭제</button></div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </main>

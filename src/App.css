@@ -180,3 +180,36 @@ ul {
 .grid_menu_wrapper .dropdown_content a:hover {
   background-color : #ececec
 }
+
+
+/* floating bar */
+
+#floating_bar_wrapper {
+  background-color: black;
+  height: 75px;
+  position: sticky;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  display: flex;
+  /* 수직 정렬 */
+  align-items: center;
+}
+
+#floating_bar {
+  width: 100%;
+  height: 50px;
+  background-color: pink;
+  display: flex;
+  flex-flow: row wrap;
+}
+
+#floating_bar > div {
+  flex: 1;
+}
+
+#delete_menu_wrap {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
