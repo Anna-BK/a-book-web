@@ -30,6 +30,11 @@ ul {
   color: #d9d9d9;
 }
 
+.naver_theme ul .active {
+  background-color: #42be6f;
+  color: white;
+}
+
 .list_menu {
   height: 647px;
   margin-top: 51px;
@@ -44,10 +49,7 @@ ul {
   cursor: pointer;
 }
 
-.naver_theme ul .active {
-  background-color: #42be6f;
-  color: white;
-}
+
 
 
 /* header */
@@ -81,18 +83,19 @@ ul {
 
 
 #profile_layer {
-  position: absolute;
+  /* position: absolute; */
   top : 55px;
   width: 150px;
-  display: none;
+  /* display: none; */
 }
 
 
-#profile_layer ul {
+.dropdown_content ul {
   padding: 5px 0;
+  margin: 0;
 }
 
-#profile_layer ul li {
+.dropdown_content ul li {
   padding: 5px 10px;
   cursor: pointer;
 }
@@ -141,4 +144,39 @@ ul {
 .grid_footer {
   height: 35px;
   background-color: white;
+}
+
+/* Grid more 메뉴 */
+.grid_menu_wrapper .dropdown_content {
+  background-color: #f9f9f9;
+  width: 150px;
+  right: 30px;
+  margin: 0;
+}
+
+
+
+.dropdown_content {
+  display: none;
+  position: absolute;
+  z-index: 1;
+}
+
+.dropdown_content ul {
+  list-style: none;
+}
+
+.dropdown.active .dropdown_content {
+  display: block;
+}
+
+
+.grid_menu_wrapper .dropdown_content a {
+  display : block;
+  text-decoration : none;
+  color : rgb(37, 37, 37);
+}
+
+.grid_menu_wrapper .dropdown_content a:hover {
+  background-color : #ececec
 }

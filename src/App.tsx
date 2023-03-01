@@ -12,7 +12,7 @@ function App() {
               <img id="gnb_profile_img" src="https://ssl.pstatic.net/static/common/myarea/myInfo.gif" height={26} />
               <span id="gnb_profile_name" >복이누나</span>
             </a>
-            <div id="profile_layer" className="naver_theme">
+            <div id="profile_layer" className="dropdown_content naver_theme">
               <ul>
                 <li className="active"><a>Settings</a></li>
                 <li><a>Logout</a></li>
@@ -43,7 +43,15 @@ function App() {
                         <span>2023-02</span>
                       </div>
                       <div className="grid_menu_wrapper">
-                        <a href=''>more</a>
+                        <div className="dropdown">
+                          <button onClick={() => { document.querySelector('.dropdown')?.classList.toggle('active') }} className="dropdown_btn">more</button>
+                          <div className="dropdown_content">
+                            <ul>
+                              <li><a href=''>Archive</a></li>
+                              <li><a href=''>Delete</a></li>
+                            </ul>
+                          </div>
+                        </div>
                       </div>
                     </div>
                     <div className="grid">
