@@ -37,7 +37,7 @@ function App() {
               <div id="content_body" >
                 <div id="grid_wrapper">
                   {/* 하나의 가계부 그리드 */}
-                  <div className="grid_container">
+                  <div className="grid_container card_box_theme">
                     <div className="grid_header">
                       <div className="grid_title_wrapper">
                         <span>2023-02</span>
@@ -100,15 +100,14 @@ function App() {
                   </div>
                 </div>
               </div>
-              <div id="content_footer">
-                <div id="floating_bar_wrapper">
+              <div id="content_footer"></div>
+              <div id="floating_bar_wrapper" className="card_box_theme">
                   <div id="floating_bar">
                     <div></div>
                     <div></div>
-                    <div id="delete_menu_wrap"><button>삭제</button></div>
+                    <div id="delete_menu_wrap"><button id="delete_btn" className="custom_btn"><span>삭제하기</span></button></div>
                   </div>
                 </div>
-              </div>
             </div>
           </div>
         </main>

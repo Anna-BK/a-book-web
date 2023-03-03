@@ -5,21 +5,40 @@ html {
   box-sizing: inherit;
 }
 
+
+
+html, body, .app, #root, main, #content_wrapper, #content, #content_body {
+  height: 100%;
+}
+
+body {
+  overflow: hidden;
+}
+
 .container {
   width: 100%;
-  background-color: beige;
+  background-color: #fafbfc;;
   display: flow-root;
+  height: 100%;
 }
 
 #nav_snb {
   width: 219px;
-  position: relative;
-  top: 0;
+  position: fixed;
+  bottom: 0;
   float: left;
   margin-right: 20px;
+  top: 55px;
+  z-index: 10;
 }
 
-
+.card_box_theme {
+  border: 1px solid #e8ebee;
+  border-radius: 6px;
+  -webkit-box-shadow: 0 1px 1px 0 rgb(0 0 0 / 3%);
+  box-shadow: 0 1px 1px 0 rgb(0 0 0 / 3%);
+  background-color: #fff;
+}
 
 ul {
   list-style: none;
@@ -36,12 +55,12 @@ ul {
 }
 
 .list_menu {
-  height: 647px;
-  margin-top: 51px;
+  height: 100%;
 }
 
 .list_menu ul {
   padding: 15px 0;
+  margin: 0;
 }
 
 .list_menu ul li {
@@ -57,7 +76,9 @@ ul {
 #top_header {
   position: relative;
   height: 55px;
-  background-color: beige;
+  background-color: white; 
+  border-bottom: 1px solid #dcdcdc;
+  box-shadow: 0 1px 5px 0 rgb(107 119 172 / 20%);
 }
 
 .login_group {
@@ -68,8 +89,14 @@ ul {
 
 #profile{
   padding: 12px;
-  background-color: gray;
   width: 150px;
+  text-align: center;
+}
+
+#profile > a {
+  text-decoration: none;
+  color: #666;
+  font-size: 14px;
 }
 
 #profile img,span {
@@ -115,6 +142,10 @@ ul {
   padding: 30px;
 }
 
+.grid_container {
+  padding: 10px 20px;
+}
+
 .a_book_table {
   width: 100%;
   border: 1px solid black;
@@ -154,6 +185,10 @@ ul {
   margin: 0;
 }
 
+.grid_container > div {
+  padding: 10px 0;
+}
+
 
 
 .dropdown_content {
@@ -185,12 +220,14 @@ ul {
 /* floating bar */
 
 #floating_bar_wrapper {
-  background-color: black;
+  box-shadow: 0 0px 20px 0 rgb(0 0 0 / 5%);
+  margin: 0 25px;
+  background-color: white;
   height: 75px;
   position: sticky;
-  bottom: 0;
+  bottom: 10px;
   right: 0;
-  width: 100%;
+  /* width: 100%; */
   display: flex;
   /* 수직 정렬 */
   align-items: center;
@@ -199,7 +236,6 @@ ul {
 #floating_bar {
   width: 100%;
   height: 50px;
-  background-color: pink;
   display: flex;
   flex-flow: row wrap;
 }
@@ -212,4 +248,21 @@ ul {
   align-items: center;
   display: flex;
   justify-content: center;
+}
+
+/* 버튼 */
+.custom_btn {
+  height: 42px;
+  box-shadow: none;
+  font-size: 15px;
+  font-weight: 900;
+  line-height: 34px;
+  padding: 0 15px;
+}
+
+#delete_btn {
+  color: #fff;
+  background-color: #f5707a;
+  border-width: 0;
+  border-radius: 3px;
 }
