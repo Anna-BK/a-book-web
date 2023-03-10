@@ -5,8 +5,8 @@ function Login() {
     return (
         <div className="wrap">
             <header className="header">
-                <div className="header_inner foot_logo">
-                    <a href=""><h1>가계복</h1></a>
+                <div className="header_inner">
+                    <a href=""><h1>  </h1></a>
                 </div>
             </header>
             <div className="container">

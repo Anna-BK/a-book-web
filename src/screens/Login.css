@@ -116,14 +116,10 @@ button {
     display: inline-block;
     vertical-align: top;
     background-repeat: no-repeat;
-    width: 120px;
-    height: 120px;
+    width: 306px;
+    height: 124px;
 
-    background-image: url('https://em-content.zobj.net/thumbs/240/google/350/cat_1f408.png');
-    background-size: 120px 120px;
+    background-image: url('./logo.png');
+    background-size: 306px 124px;
 }
 
-.foot_logo {
-    background-image: url("./foot-print.png");
-    background-size: 53px 80px;
-}
