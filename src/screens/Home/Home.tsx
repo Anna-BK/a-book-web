@@ -1,9 +1,12 @@
 import React from 'react';
+import PageTitle from '../../components/PageTitle';
 import './Home.css';
 
 
 function App() {
   return (
+    <>
+    <PageTitle title='가계복'/>
     <div className="app">
       <header id="top_header" className="header">
         <div className="login_group">
@@ -113,6 +116,7 @@ function App() {
         </main>
       </div>
     </div>
+    </>
   );
 }
 

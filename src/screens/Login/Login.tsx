@@ -1,8 +1,12 @@
 import React from 'react';
+import PageTitle from '../../components/PageTitle';
+
 import './Login.css';
 
 function Login() {
     return (
+        <>
+        <PageTitle title='로그인'/>
         <div className="wrap">
             <header className="header">
                 <div className="header_inner">
@@ -35,6 +39,7 @@ function Login() {
             </div>
             <div className="footer"></div>
         </div>
+        </>
     )
 }
 
