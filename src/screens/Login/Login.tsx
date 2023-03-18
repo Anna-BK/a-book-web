@@ -18,11 +18,13 @@ function Login() {
     const navigate = useNavigate();
 
 
-    const { register, handleSubmit, watch, formState: { errors } } = useForm<Inputs>({
+    const { register, handleSubmit, watch, formState: { errors }, setError, clearErrors } = useForm<Inputs>({
         mode: "onSubmit"
     });
     const onSubmit: SubmitHandler<Inputs> = function (data) {
         //console.log(data);
+       
+
         const { id, password } = data;
 
         login({
@@ -68,10 +70,17 @@ function Login() {
 
             if(!ok && error){
                 //에러 메시지 출력
+                setError("root.apiError", {
+                    message : "아이디 또는 비밀번호가 일치하지 않습니다"
+                })
             }
             
         }
     });
+
+    const clearApiError = ()=>{
+        clearErrors("root.apiError");
+    };
 
 
 
@@ -95,15 +104,16 @@ function Login() {
                                 <form onSubmit={handleSubmit(onSubmit)}>
                                     <div className="id_pw_wrap">
                                         <div className={"input_row" + (errors.id ? " focus" : "")}>
-                                            <input className="input_text" type="text" placeholder="아이디" {...register("id", { required: true })} />
+                                            <input className="input_text" type="text" placeholder="아이디" {...register("id", { required: true })} onChange={clearApiError} />
                                         </div>
                                         <div className={"input_row" + (errors.password && !errors.id ? " focus" : "")}>
-                                            <input className="input_text" type="password" placeholder="비밀번호" {...register("password", { required: true })} />
+                                            <input className="input_text" type="password" placeholder="비밀번호" {...register("password", { required: true })} onChange={clearApiError} />
                                         </div>
                                     </div>
                                     <div className="login_error_wrap">
                                         {errors.id && <span>아이디를 입력하세요</span>}
                                         {errors.password && !errors.id && <span>비밀번호를 입력하세요</span>}
+                                        {errors.root?.apiError.message? <span>{errors.root?.apiError.message}</span> : null }
                                     </div>
                                     <div className="btn_login_wrap">
                                         <button className="btn_login btn_theme_1"><span className="btn_text">로그인</span></button>
