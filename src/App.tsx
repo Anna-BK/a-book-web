@@ -5,8 +5,9 @@ import { isLoggedInVar } from './apollo';
 import Home from './screens/Home/Home';
 import Login from './screens/Login/Login';
 
-
 function App() {
+
+  const isLoggedIn = useReactiveVar(isLoggedInVar);
 
   return (
     <Routes>
@@ -14,7 +15,8 @@ function App() {
         <Route index element={
           <RequireAuth><Home /></RequireAuth>
         } />
-        <Route path='login' element={<Login />} />
+         {/* 로그인 한 경우 로그인 페이지 띄우지 않음 */}
+        <Route path='login' element={(isLoggedIn? <Navigate to="/"/> : <Login />)} />
       </Route>
     </Routes>
   );
@@ -24,8 +26,10 @@ export default App;
 
 
 function RequireAuth({ children }: { children: JSX.Element }) {
-  const isLoggedIn = useReactiveVar(isLoggedInVar);
+
   let location = useLocation();
+  const isLoggedIn = useReactiveVar(isLoggedInVar);
+
 
   if (!isLoggedIn) {
     // Redirect them to the /login page, but save the current location they were
