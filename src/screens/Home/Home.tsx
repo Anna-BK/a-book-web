@@ -1,5 +1,5 @@
 import { gql, useQuery } from '@apollo/client';
-import React, { useMemo } from 'react';
+import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import Grid from '../../components/Grid';
 import PageTitle from '../../components/PageTitle';
 import Table from '../../components/Table';
@@ -53,9 +53,18 @@ const historyToObject = function (colDatas : ColumnData[]) : object {
   }, {});
 }
 
+const formatColumns = function (columns : Column[]) : { Header: string; accessor: string; }[] {
+  return columns.map((col)=>(
+    {
+      Header: col.title,
+      accessor: col.id.toString(),
+    }
+  ))
+}
+
 function App() {
 
-  const GET_BOOKS = gql`
+  const GET_BOOKS_COLUMNS = gql`
   query Books($offset: Int!, $limit: Int!) {
   books(offset: $offset, limit: $limit) {
     ok
@@ -72,33 +81,64 @@ function App() {
       title
     }
   }
+  columns {
+    ok
+    columns {
+      columnType
+      id
+      title
+    }
+  }
 }`;
 
 
-  const { data } = useQuery(GET_BOOKS, {
-    variables: {
-      offset: 0,
-      limit: 10
-    }
-  });
+
+
+  // const [ books, setBooks ] = useState([]);
+  // const columns = useRef<{ Header: string; accessor: number; }[]>([]);
+
+ // useQuery는 hook이기 때문에 hook안에서 쓸 수 없다.
+ // hook안에 이미 useEffect와 같은 lifeCycle 관련 로직이 있기 대문이다. 
+ // useLayoutEffect(()=>{
+
+    const { loading, error, data } = useQuery(GET_BOOKS_COLUMNS, {
+      variables: {
+        offset: 0,
+        limit: 10
+      }
+    });
+    
+    // console.log(data);
+
+    // if(data.columns.ok){
+    //   columns.current = formatColumns(data.columns.columns);
+    // }
+
+    // if(data.books.ok){
+    //   setBooks(data.books.books);
+    // }
 
 
 
-console.log(data);
+  //},[]);
+
+console.log(loading, data);
+
+// console.log(data);
 
   //임시값 (user의 column 조회 API 필요)
-  const columns = useMemo(()=>(
-    [ {
-      Header: '날짜',
-      accessor: '2',
-    }, {
-      Header: '제목',
-      accessor: '3',
-    }, {
-      Header: '비용',
-      accessor: '4',
-    },]
-  ),[]);
+  // const columns = useMemo(()=>(
+  //   [ {
+  //     Header: '날짜',
+  //     accessor: '2',
+  //   }, {
+  //     Header: '제목',
+  //     accessor: '3',
+  //   }, {
+  //     Header: '비용',
+  //     accessor: '4',
+  //   },]
+  // ),[]);
 
 
   return (
@@ -139,7 +179,7 @@ console.log(data);
                     {/* 하나의 가계부 그리드 */}
                     {data?.books?.books?.map((book : Book)=>(
                       <Grid title={book.title}>
-                          <Table columns={columns} data={book.historys?.map((history)=>(
+                          <Table columns={formatColumns(data?.columns?.columns)} data={book.historys?.map((history)=>(
                             historyToObject(history.columnDatas)
                           ))}/>
                       </Grid>
