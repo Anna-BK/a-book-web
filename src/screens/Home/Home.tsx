@@ -1,5 +1,5 @@
-import { gql, useQuery } from '@apollo/client';
-import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { gql, useMutation, useQuery } from '@apollo/client';
+import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import Grid from '../../components/Grid';
 import PageTitle from '../../components/PageTitle';
 import Table from '../../components/Table';
@@ -62,83 +62,87 @@ const formatColumns = function (columns : Column[]) : { Header: string; accessor
   ))
 }
 
-function App() {
+const GET_BOOKS_COLUMNS = gql`
+query Books($offset: Int!, $limit: Int!) {
+books(offset: $offset, limit: $limit) {
+  ok
+  error
+  books {
+    archieved
+    historys {
+      columnDatas {
+        value
+        columnId
+      }
+    }
+    userId
+    title
+  }
+}
+columns {
+  ok
+  columns {
+    columnType
+    id
+    title
+  }
+}
+}`;
 
-  const GET_BOOKS_COLUMNS = gql`
-  query Books($offset: Int!, $limit: Int!) {
-  books(offset: $offset, limit: $limit) {
-    ok
+const CREATE_BOOK = gql`
+mutation CreateBook($title: String!) {
+  createBook(title: $title) {
     error
-    books {
+    ok
+    book {
       archieved
       historys {
         columnDatas {
-          value
           columnId
+          value
         }
       }
       userId
       title
     }
   }
-  columns {
-    ok
-    columns {
-      columnType
-      id
-      title
-    }
-  }
-}`;
+}
+`;
 
+function App() {
 
-
-
-  // const [ books, setBooks ] = useState([]);
-  // const columns = useRef<{ Header: string; accessor: number; }[]>([]);
-
- // useQuery는 hook이기 때문에 hook안에서 쓸 수 없다.
- // hook안에 이미 useEffect와 같은 lifeCycle 관련 로직이 있기 대문이다. 
- // useLayoutEffect(()=>{
-
-    const { loading, error, data } = useQuery(GET_BOOKS_COLUMNS, {
+    const { loading, data } = useQuery(GET_BOOKS_COLUMNS, {
       variables: {
         offset: 0,
         limit: 10
       }
     });
+
+    const [ createBook, {error} ] = useMutation(CREATE_BOOK, {
+      refetchQueries: [
+        {query: GET_BOOKS_COLUMNS, variables : {
+          offset: 0,
+          limit: 10
+        } }, // DocumentNode object parsed with gql
+        'Books' // Query name
+      ],
+    });
     
-    // console.log(data);
-
-    // if(data.columns.ok){
-    //   columns.current = formatColumns(data.columns.columns);
-    // }
-
-    // if(data.books.ok){
-    //   setBooks(data.books.books);
-    // }
-
-
-
-  //},[]);
+ 
 
 console.log(loading, data);
 
-// console.log(data);
 
-  //임시값 (user의 column 조회 API 필요)
-  // const columns = useMemo(()=>(
-  //   [ {
-  //     Header: '날짜',
-  //     accessor: '2',
-  //   }, {
-  //     Header: '제목',
-  //     accessor: '3',
-  //   }, {
-  //     Header: '비용',
-  //     accessor: '4',
-  //   },]
-  // ),[]);
+const handleBookAddBtnClick = useCallback(function () {
+  console.log('handleBookAddBtnClick');
+
+  createBook({
+    variables : {
+      title : "Untitled"
+    }
+  });
+},[]);
+
 
 
   return (
@@ -175,7 +179,7 @@ console.log(loading, data);
               <div id="content">
                 <div id="content_header">
                   <div id="book_add_menu_btn_wrap" className='btn_wrap'>
-                    <button id='book_add_btn' className='custom_btn'><span>+</span></button>
+                    <button onClick={handleBookAddBtnClick} id='book_add_btn' className='custom_btn'><span>+</span></button>
                   </div>
                 </div>
                 <div id="content_body" >
