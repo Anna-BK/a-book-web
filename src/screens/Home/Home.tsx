@@ -173,7 +173,11 @@ console.log(loading, data);
           <main>
             <div id='content_wrapper'>
               <div id="content">
-                <div id="content_header"></div>
+                <div id="content_header">
+                  <div id="book_add_menu_btn_wrap" className='btn_wrap'>
+                    <button id='book_add_btn' className='custom_btn'><span>+</span></button>
+                  </div>
+                </div>
                 <div id="content_body" >
                   <div id="grid_wrapper">
                     {/* 하나의 가계부 그리드 */}
@@ -188,10 +192,10 @@ console.log(loading, data);
                 </div>
                 <div id="content_footer"></div>
                 <div id="floating_bar_wrapper" className="card_box_theme">
-                  <div id="floating_bar">
+                  <div id="floating_bar" className="menu_panel">
                     <div></div>
                     <div></div>
-                    <div id="delete_menu_wrap"><button id="delete_btn" className="custom_btn"><span>삭제하기</span></button></div>
+                    <div id="delete_menu_wrap" className='btn_wrap'><button id="delete_btn" className="custom_btn"><span>삭제하기</span></button></div>
                   </div>
                 </div>
               </div>

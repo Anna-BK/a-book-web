@@ -233,7 +233,7 @@ ul {
   align-items: center;
 }
 
-#floating_bar {
+/* #floating_bar {
   width: 100%;
   height: 50px;
   display: flex;
@@ -242,9 +242,26 @@ ul {
 
 #floating_bar > div {
   flex: 1;
+} */
+
+.menu_panel {
+  width: 100%;
+  height: 50px;
+  display: flex;
+  flex-flow: row wrap;
 }
 
-#delete_menu_wrap {
+.menu_panel > div {
+  flex: 1;
+}
+
+/* #delete_menu_wrap {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+} */
+
+.btn_wrap {
   align-items: center;
   display: flex;
   justify-content: center;
@@ -252,7 +269,7 @@ ul {
 
 /* 버튼 */
 .custom_btn {
-  height: 42px;
+  /* height: 42px; */
   box-shadow: none;
   font-size: 15px;
   font-weight: 900;
@@ -261,8 +278,22 @@ ul {
 }
 
 #delete_btn {
+  height: 42px;
   color: #fff;
   background-color: #f5707a;
   border-width: 0;
   border-radius: 3px;
+}
+
+#book_add_btn {
+  color: #fff;
+  background-color: gray;
+  border-width: 0;
+  border-radius: 3px;
+}
+
+#book_add_menu_btn_wrap {
+  float: right;
+  height: 100%;
+  margin-right: 20px;
 }
