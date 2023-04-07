@@ -1,5 +1,7 @@
 import { gql, useMutation, useQuery } from '@apollo/client';
 import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { logUserOut } from '../../apollo';
 import Grid from '../../components/Grid';
 import PageTitle from '../../components/PageTitle';
 import Table from '../../components/Table';
@@ -111,6 +113,8 @@ mutation CreateBook($title: String!) {
 
 function App() {
 
+  const navigate = useNavigate();
+
     const { loading, data } = useQuery(GET_BOOKS_COLUMNS, {
       variables: {
         offset: 0,
@@ -118,7 +122,7 @@ function App() {
       }
     });
 
-    const [ createBook, {error} ] = useMutation(CREATE_BOOK, {
+    const [ createBook, { data : createBookData }] = useMutation(CREATE_BOOK, {
       refetchQueries: [
         {query: GET_BOOKS_COLUMNS, variables : {
           offset: 0,
@@ -127,6 +131,15 @@ function App() {
         'Books' // Query name
       ],
     });
+
+
+    // 토큰 만료 에러 처리 예시 (임시)
+    // https://www.apollographql.com/docs/react/data/error-handling/
+    // 에러 메시지가 아닌 NetworkError나 권한 없음 의미하는 300 코드가 필요함 (공통코드)
+     if(createBookData?.createBook.error === "Please log in."){
+        logUserOut();
+        navigate('/login');
+    }
     
  
 
