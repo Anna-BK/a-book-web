@@ -1,9 +1,10 @@
 import { gql, useMutation, useQuery } from '@apollo/client';
-import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback,  } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { logUserOut } from '../../apollo';
 import EditableInput from '../../components/EditableInput';
 import Grid from '../../components/Grid';
+import MoreDropDown from '../../components/MoreDropDown';
 import PageTitle from '../../components/PageTitle';
 import Table from '../../components/Table';
 import './Home.css';
@@ -123,6 +124,25 @@ mutation ModifyBook($bookId: Int!, $title: String, $archieved: Boolean) {
 }
 `;
 
+const DELETE_BOOK = gql`
+mutation DeleteBook($bookId: Int!) {
+  deleteBook(bookId: $bookId) {
+    error
+    ok
+  }
+}
+`;
+
+const refetchBookOption = {
+  refetchQueries: [
+    {query: GET_BOOKS_COLUMNS, variables : {
+      offset: 0,
+      limit: 10
+    } }, // DocumentNode object parsed with gql
+    'Books' // Query name
+  ],
+};
+
 function App() {
 
   const navigate = useNavigate();
@@ -154,6 +174,9 @@ function App() {
         'Books' // Query name
       ],
     });
+
+
+    const [ deleteBook ] = useMutation(DELETE_BOOK, refetchBookOption);
 
 
     // 토큰 만료 에러 처리 예시 (임시)
@@ -188,7 +211,20 @@ const handleGridTitleBlur = useCallback(function (bookId : number, value : strin
       title : value,
     }
   });
+
+
   
+},[]);
+
+const handleBookDeleteClick = useCallback((bookId : number)=>{
+    console.log('handleBookDeleteClick', bookId);
+
+    deleteBook({
+      variables : {
+        bookId
+      }
+    });
+    
 },[]);
 
   return (
@@ -232,7 +268,7 @@ const handleGridTitleBlur = useCallback(function (bookId : number, value : strin
                   <div id="grid_wrapper">
                     {/* 하나의 가계부 그리드 */}
                     {data?.books?.books?.map((book : Book)=>(
-                      <Grid key={book.id} title={<EditableInput value={book.title} updateFn={handleGridTitleBlur.bind(null, book.id)} />}>
+                      <Grid key={book.id} menu={<MoreDropDown list={[{title : 'Delete', onClickFn : handleBookDeleteClick.bind(null, book.id)}]} />} title={<EditableInput value={book.title} updateFn={handleGridTitleBlur.bind(null, book.id)} />}>
                           <Table columns={formatColumns(data?.columns?.columns)} data={book.historys?.map((history)=>(
                             historyToObject(history.columnDatas)
                           ))}/>
