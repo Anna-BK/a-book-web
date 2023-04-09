@@ -2,12 +2,14 @@ import { gql, useMutation, useQuery } from '@apollo/client';
 import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { logUserOut } from '../../apollo';
+import EditableInput from '../../components/EditableInput';
 import Grid from '../../components/Grid';
 import PageTitle from '../../components/PageTitle';
 import Table from '../../components/Table';
 import './Home.css';
 
 type Book = {
+  id : number,
   archieved: Boolean,
   historys: History[],
   title: string,
@@ -70,6 +72,7 @@ books(offset: $offset, limit: $limit) {
   ok
   error
   books {
+    id
     archieved
     historys {
       columnDatas {
@@ -111,6 +114,15 @@ mutation CreateBook($title: String!) {
 }
 `;
 
+const MODIFY_BOOK = gql`
+mutation ModifyBook($bookId: Int!, $title: String, $archieved: Boolean) {
+  modifyBook(bookId: $bookId, title: $title, archieved: $archieved) {
+    error
+    ok
+  }
+}
+`;
+
 function App() {
 
   const navigate = useNavigate();
@@ -123,6 +135,17 @@ function App() {
     });
 
     const [ createBook, { data : createBookData }] = useMutation(CREATE_BOOK, {
+      refetchQueries: [
+        {query: GET_BOOKS_COLUMNS, variables : {
+          offset: 0,
+          limit: 10
+        } }, // DocumentNode object parsed with gql
+        'Books' // Query name
+      ],
+    });
+
+
+    const [ modifyBook ] = useMutation(MODIFY_BOOK, {
       refetchQueries: [
         {query: GET_BOOKS_COLUMNS, variables : {
           offset: 0,
@@ -156,7 +179,17 @@ const handleBookAddBtnClick = useCallback(function () {
   });
 },[]);
 
+const handleGridTitleBlur = useCallback(function (bookId : number, value : string) {
+  console.log('handleGridTitleBlur', bookId, value);
 
+  modifyBook({
+    variables : {
+      bookId,
+      title : value,
+    }
+  });
+  
+},[]);
 
   return (
     <>
@@ -199,7 +232,7 @@ const handleBookAddBtnClick = useCallback(function () {
                   <div id="grid_wrapper">
                     {/* 하나의 가계부 그리드 */}
                     {data?.books?.books?.map((book : Book)=>(
-                      <Grid title={book.title}>
+                      <Grid key={book.id} title={<EditableInput value={book.title} updateFn={handleGridTitleBlur.bind(null, book.id)} />}>
                           <Table columns={formatColumns(data?.columns?.columns)} data={book.historys?.map((history)=>(
                             historyToObject(history.columnDatas)
                           ))}/>
