@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 
 
-function MoreDropBox() {
+function MoreDropDown() {
 
     const [isActive, setIsActive] = useState(false);
 
@@ -22,4 +22,4 @@ function MoreDropBox() {
 
 }
 
-export default MoreDropBox;
+export default MoreDropDown;
