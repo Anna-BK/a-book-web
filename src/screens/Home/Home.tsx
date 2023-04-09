@@ -1,5 +1,7 @@
-import { gql, useQuery } from '@apollo/client';
-import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { gql, useMutation, useQuery } from '@apollo/client';
+import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { logUserOut } from '../../apollo';
 import Grid from '../../components/Grid';
 import PageTitle from '../../components/PageTitle';
 import Table from '../../components/Table';
@@ -62,83 +64,98 @@ const formatColumns = function (columns : Column[]) : { Header: string; accessor
   ))
 }
 
-function App() {
+const GET_BOOKS_COLUMNS = gql`
+query Books($offset: Int!, $limit: Int!) {
+books(offset: $offset, limit: $limit) {
+  ok
+  error
+  books {
+    archieved
+    historys {
+      columnDatas {
+        value
+        columnId
+      }
+    }
+    userId
+    title
+  }
+}
+columns {
+  ok
+  columns {
+    columnType
+    id
+    title
+  }
+}
+}`;
 
-  const GET_BOOKS_COLUMNS = gql`
-  query Books($offset: Int!, $limit: Int!) {
-  books(offset: $offset, limit: $limit) {
-    ok
+const CREATE_BOOK = gql`
+mutation CreateBook($title: String!) {
+  createBook(title: $title) {
     error
-    books {
+    ok
+    book {
       archieved
       historys {
         columnDatas {
-          value
           columnId
+          value
         }
       }
       userId
       title
     }
   }
-  columns {
-    ok
-    columns {
-      columnType
-      id
-      title
-    }
-  }
-}`;
+}
+`;
 
+function App() {
 
+  const navigate = useNavigate();
 
-
-  // const [ books, setBooks ] = useState([]);
-  // const columns = useRef<{ Header: string; accessor: number; }[]>([]);
-
- // useQuery는 hook이기 때문에 hook안에서 쓸 수 없다.
- // hook안에 이미 useEffect와 같은 lifeCycle 관련 로직이 있기 대문이다. 
- // useLayoutEffect(()=>{
-
-    const { loading, error, data } = useQuery(GET_BOOKS_COLUMNS, {
+    const { loading, data } = useQuery(GET_BOOKS_COLUMNS, {
       variables: {
         offset: 0,
         limit: 10
       }
     });
+
+    const [ createBook, { data : createBookData }] = useMutation(CREATE_BOOK, {
+      refetchQueries: [
+        {query: GET_BOOKS_COLUMNS, variables : {
+          offset: 0,
+          limit: 10
+        } }, // DocumentNode object parsed with gql
+        'Books' // Query name
+      ],
+    });
+
+
+    // 토큰 만료 에러 처리 예시 (임시)
+    // https://www.apollographql.com/docs/react/data/error-handling/
+    // 에러 메시지가 아닌 NetworkError나 권한 없음 의미하는 300 코드가 필요함 (공통코드)
+     if(createBookData?.createBook.error === "Please log in."){
+        logUserOut();
+        navigate('/login');
+    }
     
-    // console.log(data);
-
-    // if(data.columns.ok){
-    //   columns.current = formatColumns(data.columns.columns);
-    // }
-
-    // if(data.books.ok){
-    //   setBooks(data.books.books);
-    // }
-
-
-
-  //},[]);
+ 
 
 console.log(loading, data);
 
-// console.log(data);
 
-  //임시값 (user의 column 조회 API 필요)
-  // const columns = useMemo(()=>(
-  //   [ {
-  //     Header: '날짜',
-  //     accessor: '2',
-  //   }, {
-  //     Header: '제목',
-  //     accessor: '3',
-  //   }, {
-  //     Header: '비용',
-  //     accessor: '4',
-  //   },]
-  // ),[]);
+const handleBookAddBtnClick = useCallback(function () {
+  console.log('handleBookAddBtnClick');
+
+  createBook({
+    variables : {
+      title : "Untitled"
+    }
+  });
+},[]);
+
 
 
   return (
@@ -173,7 +190,11 @@ console.log(loading, data);
           <main>
             <div id='content_wrapper'>
               <div id="content">
-                <div id="content_header"></div>
+                <div id="content_header">
+                  <div id="book_add_menu_btn_wrap" className='btn_wrap'>
+                    <button onClick={handleBookAddBtnClick} id='book_add_btn' className='custom_btn'><span>+</span></button>
+                  </div>
+                </div>
                 <div id="content_body" >
                   <div id="grid_wrapper">
                     {/* 하나의 가계부 그리드 */}
@@ -188,10 +209,10 @@ console.log(loading, data);
                 </div>
                 <div id="content_footer"></div>
                 <div id="floating_bar_wrapper" className="card_box_theme">
-                  <div id="floating_bar">
+                  <div id="floating_bar" className="menu_panel">
                     <div></div>
                     <div></div>
-                    <div id="delete_menu_wrap"><button id="delete_btn" className="custom_btn"><span>삭제하기</span></button></div>
+                    <div id="delete_menu_wrap" className='btn_wrap'><button id="delete_btn" className="custom_btn"><span>삭제하기</span></button></div>
                   </div>
                 </div>
               </div>
