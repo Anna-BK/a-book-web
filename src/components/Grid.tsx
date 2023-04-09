@@ -2,10 +2,11 @@ import React from 'react';
 
 type GridProps = {
     title : string | React.ReactNode,
-    children?: React.ReactNode
+    menu? : React.ReactNode,
+    children? : React.ReactNode
 };
 
-function Grid({ title, children } : GridProps){
+function Grid({ title, children, menu } : GridProps){
 
 
     return (
@@ -15,15 +16,7 @@ function Grid({ title, children } : GridProps){
             <span>{title}</span>
           </div>
           <div className="grid_menu_wrapper">
-            <div className="dropdown">
-              <button onClick={() => { document.querySelector('.dropdown')?.classList.toggle('active') }} className="dropdown_btn">more</button>
-              <div className="dropdown_content">
-                <ul>
-                  <li><a href=''>Archive</a></li>
-                  <li><a href=''>Delete</a></li>
-                </ul>
-              </div>
-            </div>
+              {menu}
           </div>
         </div>
         <div className="grid">

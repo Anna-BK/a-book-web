@@ -1,7 +1,13 @@
 import React, { useCallback, useState } from 'react';
 
 
-function MoreDropDown() {
+type MoreDropDownProps = {
+    list : Array<{title : string, onClickFn : any}>,
+}
+
+function MoreDropDown({
+    list
+} : MoreDropDownProps) {
 
     const [isActive, setIsActive] = useState(false);
 
@@ -14,8 +20,9 @@ function MoreDropDown() {
             <button onClick={toggleIsActive} className="dropdown_btn">more</button>
             <div className="dropdown_content">
                 <ul>
-                    <li><a href=''>Archive</a></li>
-                    <li><a href=''>Delete</a></li>
+                    {list.map((menu,idx)=>(
+                        <li key={idx} onClick={menu.onClickFn}><a href='#' onClick={(e)=>{e.preventDefault();}}>{menu.title}</a></li>
+                    ))}
                 </ul>
             </div>
         </div>)
