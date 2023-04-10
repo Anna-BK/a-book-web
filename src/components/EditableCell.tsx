@@ -3,6 +3,8 @@ import styled from 'styled-components';
 
 type EditableInputProps = {
     value : string,
+    row : any,
+    column : any
     updateFn : any, 
 };
 
@@ -12,12 +14,12 @@ const EditStyleInput = styled.input`
 `;
 
 
-function EditableInput({
+function EditableCell({
     value : initialValue,
     updateFn,
     ...others
-
-} : EditableInputProps){
+// todo : React Table의 Props 조건을 만족하도록 수정 필요 
+} : any){
 
     const [value, setValue] = useState(initialValue);
 
@@ -40,4 +42,4 @@ function EditableInput({
     return <EditStyleInput {...others} value={value} onChange={handleInputChange} onBlur={handleInputBlur}  />
 }
 
-export default EditableInput;
+export default EditableCell;

@@ -1,5 +1,7 @@
 import React from 'react';
 import {useTable} from 'react-table';
+import EditableCell from './EditableCell';
+
 
 type TableProps = {
     columns? : any,
@@ -11,6 +13,9 @@ function Table({ columns , data } : TableProps){
     console.log(columns);
     console.log(data);
 
+    const defaultColumn = {
+      Cell: EditableCell
+    };
     
     
     const {
@@ -22,6 +27,7 @@ function Table({ columns , data } : TableProps){
     } = useTable({
       columns,
       data,
+      defaultColumn 
     });
 
     return (
