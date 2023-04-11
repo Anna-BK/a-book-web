@@ -1,12 +1,12 @@
 import React, { ChangeEvent, useCallback, useState } from 'react';
+import { CellProps } from 'react-table';
 import styled from 'styled-components';
 
-type EditableInputProps = {
-    value : string,
-    row : any,
-    column : any
-    updateFn : any, 
-};
+interface EditableInputProps extends CellProps<{}>  {
+    value : string;
+    updateFn? : any;  //todo  ? 붙이면 works (extends 포함관계 파악)
+}
+
 
 const EditStyleInput = styled.input`
     border : 0;
@@ -17,9 +17,8 @@ const EditStyleInput = styled.input`
 function EditableCell({
     value : initialValue,
     updateFn,
-    ...others
-// todo : React Table의 Props 조건을 만족하도록 수정 필요 
-} : any){
+    ...others 
+} : EditableInputProps){
 
     const [value, setValue] = useState(initialValue);
 
