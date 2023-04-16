@@ -20,6 +20,21 @@ const EditStyleInput = styled.input`
     font-size : medium;
 `;
 
+const INPUT_TYPE = {
+    "4" : "number",
+    "3" : "text",
+    "2" : "date",
+}
+
+type ColumnType =  keyof (typeof INPUT_TYPE) | undefined;
+
+const getInputType = function(columnType : ColumnType){
+    if (!columnType) {
+       return "text"; 
+    }
+
+    return INPUT_TYPE[columnType];
+}
 
 function EditableCell({
     value : initialValue,
@@ -51,7 +66,7 @@ function EditableCell({
         updateFn(value);
     };
 
-    return <EditStyleInput type={column?.columnType === "4" ? "number" : "text" } {...others} value={value} onChange={handleInputChange} onBlur={handleInputBlur}  />
+    return <EditStyleInput type={ getInputType(column?.columnType as ColumnType) } {...others} value={value} onChange={handleInputChange} onBlur={handleInputBlur}  />
 }
 
 export default EditableCell;
