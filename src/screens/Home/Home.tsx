@@ -58,11 +58,12 @@ const historyToObject = function (colDatas : ColumnData[]) : object {
   }, {});
 }
 
-const formatColumns = function (columns : Column[]) : { Header: string; accessor: string; }[] {
+const formatColumns = function (columns : Column[]) : { Header: string; accessor: string; columnType : string; }[] {
   return columns.map((col)=>(
     {
       Header: col.title,
       accessor: col.id.toString(),
+      columnType : col.columnType.toString(),
     }
   ))
 }

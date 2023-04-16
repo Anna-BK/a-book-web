@@ -1,8 +1,15 @@
 import React, { ChangeEvent, useCallback, useState } from 'react';
-import { CellProps } from 'react-table';
+import { CellProps, Column, ColumnInstance } from 'react-table';
 import styled from 'styled-components';
 
+// todo : 기존 타입에 내가 커스텀한 필드를 추가하고자하는데 에러가남 
+
+interface myColumn extends ColumnInstance<{}> {
+    columnType? : string;
+}
+
 interface EditableInputProps extends CellProps<{}>  {
+    column : myColumn;
     value : string;
     updateFn? : any;  //todo  ? 붙이면 works (extends 포함관계 파악)
 }
@@ -16,9 +23,15 @@ const EditStyleInput = styled.input`
 
 function EditableCell({
     value : initialValue,
+    column ,
+    row,
+    cell,
     updateFn,
     ...others 
 } : EditableInputProps){
+
+    console.log('column, row, cell');
+    console.log(column, row, cell);
 
     const [value, setValue] = useState(initialValue);
 
@@ -38,7 +51,7 @@ function EditableCell({
         updateFn(value);
     };
 
-    return <EditStyleInput {...others} value={value} onChange={handleInputChange} onBlur={handleInputBlur}  />
+    return <EditStyleInput type={column?.columnType === "4" ? "number" : "text" } {...others} value={value} onChange={handleInputChange} onBlur={handleInputBlur}  />
 }
 
 export default EditableCell;
