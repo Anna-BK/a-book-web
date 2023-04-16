@@ -7,6 +7,7 @@ import Grid from '../../components/Grid';
 import MoreDropDown from '../../components/MoreDropDown';
 import PageTitle from '../../components/PageTitle';
 import Table from '../../components/Table';
+import { Option } from '../../common';
 import './Home.css';
 
 type Book = {
@@ -37,13 +38,14 @@ type ColumnData = {
   columnId : number,
 }
 
+
 type Column =  {
   id : number,
   title : string,
   columnType : number,
   createdAt : string,
   updatedAt : string,
-  //options Option[]
+  options :  Option[],
   columnDatas : ColumnData[],
   //user User @relation(fields: [userId], references : [id], onDelete: Cascade)
   //userId Int
@@ -58,12 +60,14 @@ const historyToObject = function (colDatas : ColumnData[]) : object {
   }, {});
 }
 
-const formatColumns = function (columns : Column[]) : { Header: string; accessor: string; columnType : string; }[] {
+const formatColumns = function (columns : Column[]) : { Header: string; accessor: string; columnType : string; options : Option[] }[] {
+  console.log('columns', columns);
   return columns.map((col)=>(
     {
       Header: col.title,
       accessor: col.id.toString(),
       columnType : col.columnType.toString(),
+      options : col.options
     }
   ))
 }
@@ -92,6 +96,10 @@ columns {
     columnType
     id
     title
+    options {
+        id
+        title
+    }
   }
 }
 }`;

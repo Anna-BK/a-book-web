@@ -1,11 +1,13 @@
 import React, { ChangeEvent, useCallback, useState } from 'react';
 import { CellProps, Column, ColumnInstance } from 'react-table';
 import styled from 'styled-components';
+import { Option } from '../common';
 
 // todo : 기존 타입에 내가 커스텀한 필드를 추가하고자하는데 에러가남 
 
 interface myColumn extends ColumnInstance<{}> {
     columnType? : string;
+    options? : Option[];
 }
 
 interface EditableInputProps extends CellProps<{}>  {
@@ -42,7 +44,6 @@ function EditableCell({
     row,
     cell,
     updateFn,
-    ...others 
 } : EditableInputProps){
 
     console.log('column, row, cell');
@@ -56,6 +57,12 @@ function EditableCell({
     },[]);
 
 
+    const handleSelectChange = useCallback(function (e : ChangeEvent<HTMLSelectElement>) {
+        setValue(e.target.value);
+        updateFn(e.target.value);
+    }, []);
+
+
     // Bad Code )
     // const handleInputBlur = useCallback(()=>{
     //     updateFn(value); //value는 초기값만 계속 기억하고 있으므로(자기가 선언된 시점의 함수의 변수값) setValue 이후에 변화된 값을 가져오지 못한다.
@@ -66,7 +73,17 @@ function EditableCell({
         updateFn(value);
     };
 
-    return <EditStyleInput type={ getInputType(column?.columnType as ColumnType) } {...others} value={value} onChange={handleInputChange} onBlur={handleInputBlur}  />
+    if(column?.columnType === "1"){
+        return (
+            <select value={value} onChange={handleSelectChange}>
+                {column.options?.map((opt)=>(
+                    <option value={opt.id}>{opt.title}</option>
+                ))}
+            </select>
+        )
+    }
+
+    return <EditStyleInput type={ getInputType(column?.columnType as ColumnType) } value={value} onChange={handleInputChange} onBlur={handleInputBlur}  />
 }
 
 export default EditableCell;
