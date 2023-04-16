@@ -5,10 +5,11 @@ import EditableCell from './EditableCell';
 
 type TableProps = {
     columns? : any,
-    data? : any
+    data? : any,
+    updateFn? : any,
 }
 
-function Table({ columns , data } : TableProps){
+function Table({ columns , data, ...others } : TableProps){
 
     console.log(columns);
     console.log(data);
@@ -27,7 +28,8 @@ function Table({ columns , data } : TableProps){
     } = useTable({
       columns,
       data,
-      defaultColumn 
+      defaultColumn,
+      ...others
     });
 
     return (

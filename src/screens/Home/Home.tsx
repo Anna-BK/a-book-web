@@ -217,6 +217,11 @@ const handleGridTitleBlur = useCallback(function (bookId : number, value : strin
   
 },[]);
 
+const handleCellBlur = useCallback(function (bookId : number, value : string) {
+  console.log('handleCellBlur', bookId, value);
+  
+},[]);
+
 const handleBookDeleteClick = useCallback((bookId : number)=>{
     console.log('handleBookDeleteClick', bookId);
 
@@ -272,7 +277,7 @@ const handleBookDeleteClick = useCallback((bookId : number)=>{
                       <Grid key={book.id} menu={<MoreDropDown list={[{title : 'Delete', onClickFn : handleBookDeleteClick.bind(null, book.id)}]} />} title={<EditableInput value={book.title} updateFn={handleGridTitleBlur.bind(null, book.id)} />}>
                           <Table columns={formatColumns(data?.columns?.columns)} data={book.historys?.map((history)=>(
                             historyToObject(history.columnDatas)
-                          ))}/>
+                          ))} updateFn={handleCellBlur.bind(null, book.id)}/>
                       </Grid>
                     ))}
                   </div>
