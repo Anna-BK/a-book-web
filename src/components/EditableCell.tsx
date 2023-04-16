@@ -12,7 +12,10 @@ interface myColumn extends ColumnInstance<{}> {
 
 interface EditableInputProps extends CellProps<{}>  {
     column : myColumn;
-    value : string;
+    value : {
+        id : number;
+        value : string;
+    };
     updateFn? : any;  //todo  ? 붙이면 works (extends 포함관계 파악)
 }
 
@@ -39,12 +42,17 @@ const getInputType = function(columnType : ColumnType){
 }
 
 function EditableCell({
-    value : initialValue,
+    value : {
+        value : initialValue,
+        id : columnDataId
+    },
     column ,
     row,
     cell,
     updateFn,
 } : EditableInputProps){
+
+    console.log('initialValue',initialValue);
 
     console.log('column, row, cell');
     console.log(column, row, cell);
@@ -59,8 +67,8 @@ function EditableCell({
 
     const handleSelectChange = useCallback(function (e : ChangeEvent<HTMLSelectElement>) {
         setValue(e.target.value);
-        updateFn(e.target.value);
-    }, []);
+        updateFn(columnDataId, e.target.value);
+    }, [columnDataId]);
 
 
     // Bad Code )
@@ -70,14 +78,14 @@ function EditableCell({
 
     // Good Code )
     const handleInputBlur = ()=>{
-        updateFn(value);
+        updateFn(columnDataId, value);
     };
 
     if(column?.columnType === "1"){
         return (
             <select value={value} onChange={handleSelectChange}>
                 {column.options?.map((opt)=>(
-                    <option value={opt.id}>{opt.title}</option>
+                    <option key={opt.id} value={opt.id}>{opt.title}</option>
                 ))}
             </select>
         )
