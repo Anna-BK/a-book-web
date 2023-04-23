@@ -14,7 +14,8 @@ const EditStyleInput = styled.input`
 
 function EditableInput({
     value : initialValue,
-    updateFn
+    updateFn,
+    ...others
 
 } : EditableInputProps){
 
@@ -36,7 +37,7 @@ function EditableInput({
         updateFn(value);
     };
 
-    return <EditStyleInput value={value} onChange={handleInputChange} onBlur={handleInputBlur}  />
+    return <EditStyleInput {...others} value={value} onChange={handleInputChange} onBlur={handleInputBlur}  />
 }
 
 export default EditableInput;

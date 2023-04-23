@@ -7,6 +7,7 @@ import Grid from '../../components/Grid';
 import MoreDropDown from '../../components/MoreDropDown';
 import PageTitle from '../../components/PageTitle';
 import Table from '../../components/Table';
+import { Option } from '../../common';
 import './Home.css';
 
 type Book = {
@@ -37,13 +38,14 @@ type ColumnData = {
   columnId : number,
 }
 
+
 type Column =  {
   id : number,
   title : string,
   columnType : number,
   createdAt : string,
   updatedAt : string,
-  //options Option[]
+  options :  Option[],
   columnDatas : ColumnData[],
   //user User @relation(fields: [userId], references : [id], onDelete: Cascade)
   //userId Int
@@ -53,16 +55,22 @@ type Column =  {
 // { columnId : value, .... } 형태...
 const historyToObject = function (colDatas : ColumnData[]) : object {
   return colDatas.reduce((accum : any , colData : ColumnData)=>{
-      accum[colData.columnId?.toString()] = colData.value;
+      accum[colData.columnId?.toString()] = {
+        id : colData.id,  //columnDataId
+        value : colData.value
+      }
       return accum;
   }, {});
 }
 
-const formatColumns = function (columns : Column[]) : { Header: string; accessor: string; }[] {
+const formatColumns = function (columns : Column[]) : { Header: string; accessor: string; columnType : string; options : Option[] }[] {
+  console.log('columns', columns);
   return columns.map((col)=>(
     {
       Header: col.title,
       accessor: col.id.toString(),
+      columnType : col.columnType.toString(),
+      options : col.options
     }
   ))
 }
@@ -77,6 +85,7 @@ books(offset: $offset, limit: $limit) {
     archieved
     historys {
       columnDatas {
+        id
         value
         columnId
       }
@@ -91,6 +100,10 @@ columns {
     columnType
     id
     title
+    options {
+        id
+        title
+    }
   }
 }
 }`;
@@ -132,6 +145,14 @@ mutation DeleteBook($bookId: Int!) {
   }
 }
 `;
+
+const MODIFY_COLUMNDATA = gql`
+mutation ModifyColumnData($columnDataId: Int!, $value: String!) {
+  modifyColumnData(columnDataId: $columnDataId, value: $value) {
+    ok
+    error
+  }
+}`;
 
 const refetchBookOption = {
   refetchQueries: [
@@ -175,6 +196,8 @@ function App() {
       ],
     });
 
+    const [ modifyColumnData ] = useMutation(MODIFY_COLUMNDATA);
+
 
     const [ deleteBook ] = useMutation(DELETE_BOOK, refetchBookOption);
 
@@ -214,6 +237,18 @@ const handleGridTitleBlur = useCallback(function (bookId : number, value : strin
 
 
   
+},[]);
+
+const handleCellBlur = useCallback(function (columnDataId : number, value : string) {
+  console.log('handleCellBlur', columnDataId, value);
+
+  modifyColumnData({
+    variables : {
+      columnDataId,
+      value
+    }
+  });
+
 },[]);
 
 const handleBookDeleteClick = useCallback((bookId : number)=>{
@@ -271,7 +306,7 @@ const handleBookDeleteClick = useCallback((bookId : number)=>{
                       <Grid key={book.id} menu={<MoreDropDown list={[{title : 'Delete', onClickFn : handleBookDeleteClick.bind(null, book.id)}]} />} title={<EditableInput value={book.title} updateFn={handleGridTitleBlur.bind(null, book.id)} />}>
                           <Table columns={formatColumns(data?.columns?.columns)} data={book.historys?.map((history)=>(
                             historyToObject(history.columnDatas)
-                          ))}/>
+                          ))} updateFn={handleCellBlur}/>
                       </Grid>
                     ))}
                   </div>
