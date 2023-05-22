@@ -7,6 +7,7 @@ type TableProps = {
     columns? : any,
     data? : any,
     updateFn? : any,
+    createFn? : any,
 }
 
 function Table({ columns , data, ...others } : TableProps){

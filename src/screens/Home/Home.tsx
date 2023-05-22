@@ -165,6 +165,15 @@ mutation ModifyColumnData($columnDataId: Int!, $value: String!) {
   }
 }`;
 
+const CREATE_HISTORY = gql`
+mutation CreateHistory($bookId: Int!, $columnDatas: [ColumnDataInput]) {
+  createHistory(bookId: $bookId, columnDatas: $columnDatas) {
+    error
+    ok
+  }
+}`;
+
+
 const refetchBookOption = {
   refetchQueries: [
     {query: GET_BOOKS_COLUMNS, variables : {
@@ -209,6 +218,7 @@ function App() {
 
     const [ modifyColumnData ] = useMutation(MODIFY_COLUMNDATA);
 
+    const [ createHistory ] = useMutation(CREATE_HISTORY, refetchBookOption);
 
     const [ deleteBook ] = useMutation(DELETE_BOOK, refetchBookOption);
 
@@ -257,6 +267,19 @@ const handleCellBlur = useCallback(function (columnDataId : number, value : stri
     variables : {
       columnDataId,
       value
+    }
+  });
+
+},[]);
+
+const handleAddCellBlur = useCallback(function(bookId : number, columnDatas : Array<{columnId : string, value :string}>){
+
+  console.log('handleAddCellBlur');
+
+  createHistory({
+    variables : {
+      bookId,
+      columnDatas
     }
   });
 
@@ -318,7 +341,9 @@ const handleBookDeleteClick = useCallback((bookId : number)=>{
                           <Table columns={formatColumns(data?.columns?.columns)} data={[...book.historys?.map((history)=>(
                             historyToObject(history.columnDatas)
                           )), ...getDefaultDataForAdd(data?.columns?.columns.length)]} 
-                          updateFn={handleCellBlur}/>
+                          updateFn={handleCellBlur}
+                          createFn={handleAddCellBlur.bind(null, book.id)}
+                          />
                       </Grid>
                     ))}
                   </div>

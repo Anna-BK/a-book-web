@@ -17,6 +17,7 @@ interface EditableInputProps extends CellProps<{}>  {
         value : string;
     };
     updateFn? : any;  //todo  ? 붙이면 works (extends 포함관계 파악)
+    createFn? : any;
 }
 
 
@@ -73,6 +74,7 @@ function EditableCell({
     row,
     cell,
     updateFn,
+    createFn,
 } : EditableInputProps){
 
     if(column?.columnType === "2" && initialValue === ""){
