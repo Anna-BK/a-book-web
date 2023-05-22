@@ -41,6 +41,29 @@ const getInputType = function(columnType : ColumnType){
     return INPUT_TYPE[columnType];
 }
 
+const leftPadZero = function(str : string){
+    return (str.length === 1 ? '0'+ str : str );
+}
+
+const getFormattedDate = function (date : Date) {
+
+    const monthStr = date.getMonth()+1 + '';
+    const dateStr = date.getDate() + '';
+
+    const dateFormat = date.getFullYear() + "-" + leftPadZero(monthStr) + "-" + leftPadZero(dateStr);
+
+    return dateFormat;
+
+    // // Get year, month, and day part from the date
+    // var year = date.toLocaleString("default", { year: "numeric" });
+    // var month = date.toLocaleString("default", { month: "2-digit" });
+    // var day = date.toLocaleString("default", { day: "2-digit" });
+
+    // // Generate yyyy-mm-dd date string
+    // var formattedDate = year + "-" + month + "-" + day;
+    // return formattedDate;
+}
+
 function EditableCell({
     value : {
         value : initialValue,
@@ -52,10 +75,16 @@ function EditableCell({
     updateFn,
 } : EditableInputProps){
 
+    if(column?.columnType === "2" && initialValue === ""){
+        initialValue = getFormattedDate(new Date());
+    }
+
     console.log('initialValue',initialValue);
 
     console.log('column, row, cell');
     console.log(column, row, cell);
+
+
 
     const [value, setValue] = useState(initialValue);
 

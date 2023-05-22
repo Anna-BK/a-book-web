@@ -75,6 +75,17 @@ const formatColumns = function (columns : Column[]) : { Header: string; accessor
   ))
 }
 
+const getDefaultDataForAdd = function(len : number){
+
+    const data : any = {};
+
+    for (let i = 1; i <= len; i++) {
+        data[i+''] = { id : 0, value : ''};
+    }
+
+    return [ data ];
+}
+
 const GET_BOOKS_COLUMNS = gql`
 query Books($offset: Int!, $limit: Int!) {
 books(offset: $offset, limit: $limit) {
@@ -304,9 +315,10 @@ const handleBookDeleteClick = useCallback((bookId : number)=>{
                     {/* 하나의 가계부 그리드 */}
                     {data?.books?.books?.map((book : Book)=>(
                       <Grid key={book.id} menu={<MoreDropDown list={[{title : 'Delete', onClickFn : handleBookDeleteClick.bind(null, book.id)}]} />} title={<EditableInput value={book.title} updateFn={handleGridTitleBlur.bind(null, book.id)} />}>
-                          <Table columns={formatColumns(data?.columns?.columns)} data={book.historys?.map((history)=>(
+                          <Table columns={formatColumns(data?.columns?.columns)} data={[...book.historys?.map((history)=>(
                             historyToObject(history.columnDatas)
-                          ))} updateFn={handleCellBlur}/>
+                          )), ...getDefaultDataForAdd(data?.columns?.columns.length)]} 
+                          updateFn={handleCellBlur}/>
                       </Grid>
                     ))}
                   </div>
