@@ -1,6 +1,6 @@
 import React from 'react';
 import {useTable} from 'react-table';
-import EditableCell from './EditableCell';
+import Cell from './Cell';
 
 
 type TableProps = {
@@ -16,7 +16,7 @@ function Table({ columns , data, ...others } : TableProps){
     console.log(data);
 
     const defaultColumn = {
-      Cell: EditableCell
+      Cell: Cell
     };
     
     

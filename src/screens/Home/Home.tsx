@@ -54,13 +54,15 @@ type Column =  {
 
 // { columnId : value, .... } 형태...
 const historyToObject = function (colDatas : ColumnData[]) : object {
-  return colDatas.reduce((accum : any , colData : ColumnData)=>{
+  const result = colDatas.reduce((accum : any , colData : ColumnData)=>{
       accum[colData.columnId?.toString()] = {
         id : colData.id,  //columnDataId
         value : colData.value
       }
       return accum;
   }, {});
+  console.log('historyToObject', result);
+  return result;
 }
 
 const formatColumns = function (columns : Column[]) : { Header: string; accessor: string; columnType : string; options : Option[] }[] {
@@ -272,14 +274,14 @@ const handleCellBlur = useCallback(function (columnDataId : number, value : stri
 
 },[]);
 
-const handleAddCellBlur = useCallback(function(bookId : number, columnDatas : Array<{columnId : string, value :string}>){
+const handleAddCellBlur = useCallback(function(bookId : number, columnId : string, value :string){
 
   console.log('handleAddCellBlur');
 
   createHistory({
     variables : {
       bookId,
-      columnDatas
+      columnDatas : [ {columnId , value }]
     }
   });
 
