@@ -2,6 +2,7 @@ import React, { ChangeEvent, useCallback, useState } from 'react';
 import { CellProps, Column, ColumnInstance } from 'react-table';
 import styled from 'styled-components';
 import { Option } from '../common';
+import { TableRowData } from '../screens/Home/Home';
 
 // todo : 기존 타입에 내가 커스텀한 필드를 추가하고자하는데 에러가남 
 
@@ -86,6 +87,13 @@ function AddableCell({
     const handleFocus = () => {
             console.log("=== For Edit ===");
             //createFn(column.id, initialValue);
+            
+            const addColData : TableRowData = JSON.parse(JSON.stringify(row.original)); 
+            addColData[column.id] = {
+                id : 0,
+                value : value
+            };
+            createFn(addColData);
     }
 
     if(column?.columnType === "1"){

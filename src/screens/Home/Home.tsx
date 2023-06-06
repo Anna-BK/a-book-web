@@ -51,9 +51,12 @@ type Column =  {
   //userId Int
 }
 
+                            //columnId        //columnDataId
+export type TableRowData = {[key : string] : {id : number, value : string}};
+
 
 // { columnId : value, .... } 형태...
-const historyToObject = function (colDatas : ColumnData[]) : object {
+const historyToObject = function (colDatas : ColumnData[]) : TableRowData {
   const result = colDatas.reduce((accum : any , colData : ColumnData)=>{
       accum[colData.columnId?.toString()] = {
         id : colData.id,  //columnDataId
@@ -77,15 +80,16 @@ const formatColumns = function (columns : Column[]) : { Header: string; accessor
   ))
 }
 
-const getDefaultDataForAdd = function(len : number){
+const getDefaultDataForAdd = function(len : number, columns : Column[]) : TableRowData{
 
+    console.log('add columns', columns);  
     const data : any = {};
 
-    for (let i = 1; i <= len; i++) {
-        data[i+''] = { id : 0, value : ''};
-    }
+    columns.forEach((col)=>{
+      data[col.id+''] = { id : 0, value : ''};
+    });
 
-    return [ data ];
+    return data;
 }
 
 const GET_BOOKS_COLUMNS = gql`
@@ -274,14 +278,30 @@ const handleCellBlur = useCallback(function (columnDataId : number, value : stri
 
 },[]);
 
-const handleAddCellBlur = useCallback(function(bookId : number, columnId : string, value :string){
+// const handleAddCellBlur = useCallback(function(bookId : number, columnId : string, value :string){
+
+//   console.log('handleAddCellBlur');
+
+//   createHistory({
+//     variables : {
+//       bookId,
+//       columnDatas : [ {columnId , value }]
+//     }
+//   });
+
+// },[]);
+
+const handleAddCellBlur = useCallback(function(bookId : number, rowData : TableRowData){
 
   console.log('handleAddCellBlur');
 
   createHistory({
     variables : {
       bookId,
-      columnDatas : [ {columnId , value }]
+      columnDatas : Object.entries(rowData).map(([columnId, { value }]) => ({
+        columnId : Number(columnId),
+        value
+      }))
     }
   });
 
@@ -342,7 +362,7 @@ const handleBookDeleteClick = useCallback((bookId : number)=>{
                       <Grid key={book.id} menu={<MoreDropDown list={[{title : 'Delete', onClickFn : handleBookDeleteClick.bind(null, book.id)}]} />} title={<EditableInput value={book.title} updateFn={handleGridTitleBlur.bind(null, book.id)} />}>
                           <Table columns={formatColumns(data?.columns?.columns)} data={[...book.historys?.map((history)=>(
                             historyToObject(history.columnDatas)
-                          )), ...getDefaultDataForAdd(data?.columns?.columns.length)]} 
+                          )), getDefaultDataForAdd(data?.columns?.columns.length, data?.columns?.columns)]} 
                           updateFn={handleCellBlur}
                           createFn={handleAddCellBlur.bind(null, book.id)}
                           />
