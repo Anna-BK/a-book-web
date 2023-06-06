@@ -2,6 +2,7 @@ import React, { ChangeEvent, useCallback, useState } from 'react';
 import { CellProps, Column, ColumnInstance } from 'react-table';
 import styled from 'styled-components';
 import { Option } from '../common';
+import { TableRowData } from '../screens/Home/Home';
 
 // todo : 기존 타입에 내가 커스텀한 필드를 추가하고자하는데 에러가남 
 
@@ -65,7 +66,7 @@ const getFormattedDate = function (date : Date) {
     // return formattedDate;
 }
 
-function EditableCell({
+function AddableCell({
     value : {
         value : initialValue,
         id : columnDataId
@@ -81,43 +82,23 @@ function EditableCell({
         initialValue = getFormattedDate(new Date());
     }
 
-    console.log('initialValue',initialValue);
-
-    console.log('column, row, cell');
-    console.log(column, row, cell);
-
-
-
     const [value, setValue] = useState(initialValue);
 
-    const handleInputChange = useCallback(function (e : ChangeEvent<HTMLInputElement>) {
-        console.log('handleInputChange');
-        setValue(e.target.value);
-    },[]);
-
-
-    const handleSelectChange = useCallback(function (e : ChangeEvent<HTMLSelectElement>) {
-        console.log("===handleSelectChange===");
-        setValue(e.target.value);
-        updateFn(columnDataId, e.target.value);
-    }, [columnDataId]);
-
-
-    // Bad Code )
-    // const handleInputBlur = useCallback(()=>{
-    //     updateFn(value); //value는 초기값만 계속 기억하고 있으므로(자기가 선언된 시점의 함수의 변수값) setValue 이후에 변화된 값을 가져오지 못한다.
-    // },[]);
-
-    // Good Code )
-    const handleInputBlur = ()=>{
-        console.log("===handleInputBlur===");
-        updateFn(columnDataId, value);
-    };
-
+    const handleFocus = () => {
+            console.log("=== For Edit ===");
+            //createFn(column.id, initialValue);
+            
+            const addColData : TableRowData = JSON.parse(JSON.stringify(row.original)); 
+            addColData[column.id] = {
+                id : 0,
+                value : value
+            };
+            createFn(addColData);
+    }
 
     if(column?.columnType === "1"){
         return (
-            <select value={value} onChange={handleSelectChange}>
+            <select value={value} onFocus={handleFocus}>
                 {column.options?.map((opt)=>(
                     <option key={opt.id} value={opt.id}>{opt.title}</option>
                 ))}
@@ -125,7 +106,7 @@ function EditableCell({
         )
     }
 
-    return <EditStyleInput type={ getInputType(column?.columnType as ColumnType) } value={value} onChange={handleInputChange} onBlur={handleInputBlur} />
+    return <EditStyleInput type={ getInputType(column?.columnType as ColumnType) } value={value}  onFocus={handleFocus} />
 }
 
-export default EditableCell;
+export default AddableCell;

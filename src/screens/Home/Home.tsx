@@ -51,16 +51,21 @@ type Column =  {
   //userId Int
 }
 
+                            //columnId        //columnDataId
+export type TableRowData = {[key : string] : {id : number, value : string}};
+
 
 // { columnId : value, .... } 형태...
-const historyToObject = function (colDatas : ColumnData[]) : object {
-  return colDatas.reduce((accum : any , colData : ColumnData)=>{
+const historyToObject = function (colDatas : ColumnData[]) : TableRowData {
+  const result = colDatas.reduce((accum : any , colData : ColumnData)=>{
       accum[colData.columnId?.toString()] = {
         id : colData.id,  //columnDataId
         value : colData.value
       }
       return accum;
   }, {});
+  console.log('historyToObject', result);
+  return result;
 }
 
 const formatColumns = function (columns : Column[]) : { Header: string; accessor: string; columnType : string; options : Option[] }[] {
@@ -73,6 +78,18 @@ const formatColumns = function (columns : Column[]) : { Header: string; accessor
       options : col.options
     }
   ))
+}
+
+const getDefaultDataForAdd = function(len : number, columns : Column[]) : TableRowData{
+
+    console.log('add columns', columns);  
+    const data : any = {};
+
+    columns.forEach((col)=>{
+      data[col.id+''] = { id : 0, value : ''};
+    });
+
+    return data;
 }
 
 const GET_BOOKS_COLUMNS = gql`
@@ -154,6 +171,15 @@ mutation ModifyColumnData($columnDataId: Int!, $value: String!) {
   }
 }`;
 
+const CREATE_HISTORY = gql`
+mutation CreateHistory($bookId: Int!, $columnDatas: [ColumnDataInput]) {
+  createHistory(bookId: $bookId, columnDatas: $columnDatas) {
+    error
+    ok
+  }
+}`;
+
+
 const refetchBookOption = {
   refetchQueries: [
     {query: GET_BOOKS_COLUMNS, variables : {
@@ -198,6 +224,7 @@ function App() {
 
     const [ modifyColumnData ] = useMutation(MODIFY_COLUMNDATA);
 
+    const [ createHistory ] = useMutation(CREATE_HISTORY, refetchBookOption);
 
     const [ deleteBook ] = useMutation(DELETE_BOOK, refetchBookOption);
 
@@ -246,6 +273,35 @@ const handleCellBlur = useCallback(function (columnDataId : number, value : stri
     variables : {
       columnDataId,
       value
+    }
+  });
+
+},[]);
+
+// const handleAddCellBlur = useCallback(function(bookId : number, columnId : string, value :string){
+
+//   console.log('handleAddCellBlur');
+
+//   createHistory({
+//     variables : {
+//       bookId,
+//       columnDatas : [ {columnId , value }]
+//     }
+//   });
+
+// },[]);
+
+const handleAddCellBlur = useCallback(function(bookId : number, rowData : TableRowData){
+
+  console.log('handleAddCellBlur');
+
+  createHistory({
+    variables : {
+      bookId,
+      columnDatas : Object.entries(rowData).map(([columnId, { value }]) => ({
+        columnId : Number(columnId),
+        value
+      }))
     }
   });
 
@@ -304,9 +360,12 @@ const handleBookDeleteClick = useCallback((bookId : number)=>{
                     {/* 하나의 가계부 그리드 */}
                     {data?.books?.books?.map((book : Book)=>(
                       <Grid key={book.id} menu={<MoreDropDown list={[{title : 'Delete', onClickFn : handleBookDeleteClick.bind(null, book.id)}]} />} title={<EditableInput value={book.title} updateFn={handleGridTitleBlur.bind(null, book.id)} />}>
-                          <Table columns={formatColumns(data?.columns?.columns)} data={book.historys?.map((history)=>(
+                          <Table columns={formatColumns(data?.columns?.columns)} data={[...book.historys?.map((history)=>(
                             historyToObject(history.columnDatas)
-                          ))} updateFn={handleCellBlur}/>
+                          )), getDefaultDataForAdd(data?.columns?.columns.length, data?.columns?.columns)]} 
+                          updateFn={handleCellBlur}
+                          createFn={handleAddCellBlur.bind(null, book.id)}
+                          />
                       </Grid>
                     ))}
                   </div>
