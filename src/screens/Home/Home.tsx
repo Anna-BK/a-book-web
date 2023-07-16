@@ -328,7 +328,9 @@ const handleBookDeleteClick = useCallback((bookId : number)=>{
     <>
     <ActiveContext.Provider value={activeDDId}>
       <PageTitle title='가계복' />
-      <div className="app">
+      <div className="app" onClick={()=>{
+        setActiveDDId('');
+      }}>
         <header id="top_header" className="header">
           <div className="login_group">
             <div id="profile">
@@ -366,7 +368,7 @@ const handleBookDeleteClick = useCallback((bookId : number)=>{
                   <div id="grid_wrapper">
                     {/* 하나의 가계부 그리드 */}
                     {data?.books?.books?.map((book : Book)=>(
-                      <Grid key={book.id} menu={<MoreDropDown id={book.id.toString()} onClickFn={()=>{setActiveDDId(book.id.toString())}} list={[{title : 'Delete', onClickFn : handleBookDeleteClick.bind(null, book.id)}]} />} 
+                      <Grid key={book.id} menu={<MoreDropDown id={book.id.toString()} onClickFn={(e : React.MouseEvent )=>{e.stopPropagation(); setActiveDDId(book.id.toString())}} list={[{title : 'Delete', onClickFn : handleBookDeleteClick.bind(null, book.id)}]} />} 
                       title={<EditableInput value={book.title} updateFn={handleGridTitleBlur.bind(null, book.id)} />}>
                           <Table columns={formatColumns(data?.columns?.columns)} data={[...book.historys?.map((history)=>(
                             historyToObject(history.columnDatas)
