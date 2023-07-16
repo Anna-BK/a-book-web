@@ -1,23 +1,30 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
+import { ActiveContext } from '../screens/Home/Home';
 
 
 type MoreDropDownProps = {
+    id : string,
+    onClickFn : any,
     list : Array<{title : string, onClickFn : any}>,
 }
 
 function MoreDropDown({
-    list
+    list,
+    onClickFn,
+    id
 } : MoreDropDownProps) {
 
-    const [isActive, setIsActive] = useState(false);
+    // const [isActive, setIsActive] = useState(false);
 
-    const toggleIsActive = useCallback(()=>{
-        setIsActive((prevState)=>(!prevState));
-    },[]);
+    // const toggleIsActive = useCallback(()=>{
+    //     setIsActive((prevState)=>(!prevState));
+    // },[]);
+
+    const activeDropDownId = useContext(ActiveContext);
 
     return (
-        <div className={`dropdown ${isActive? 'active' : ''}`}>
-            <button onClick={toggleIsActive} className="dropdown_btn">more</button>
+        <div className={`dropdown ${(id === activeDropDownId)? 'active' : ''}`}>
+            <button onClick={onClickFn} className="dropdown_btn">more</button>
             <div className="dropdown_content">
                 <ul>
                     {list.map((menu,idx)=>(

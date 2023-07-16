@@ -1,5 +1,5 @@
 import { gql, useMutation, useQuery } from '@apollo/client';
-import React, { useCallback,  } from 'react';
+import React, { createContext, useCallback, useState,  } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { logUserOut } from '../../apollo';
 import EditableInput from '../../components/EditableInput';
@@ -190,6 +190,9 @@ const refetchBookOption = {
   ],
 };
 
+
+export const ActiveContext = createContext('');
+
 function App() {
 
   const navigate = useNavigate();
@@ -318,8 +321,12 @@ const handleBookDeleteClick = useCallback((bookId : number)=>{
     
 },[]);
 
+
+  const [activeDDId, setActiveDDId] = useState('');
+
   return (
     <>
+    <ActiveContext.Provider value={activeDDId}>
       <PageTitle title='가계복' />
       <div className="app">
         <header id="top_header" className="header">
@@ -359,7 +366,8 @@ const handleBookDeleteClick = useCallback((bookId : number)=>{
                   <div id="grid_wrapper">
                     {/* 하나의 가계부 그리드 */}
                     {data?.books?.books?.map((book : Book)=>(
-                      <Grid key={book.id} menu={<MoreDropDown list={[{title : 'Delete', onClickFn : handleBookDeleteClick.bind(null, book.id)}]} />} title={<EditableInput value={book.title} updateFn={handleGridTitleBlur.bind(null, book.id)} />}>
+                      <Grid key={book.id} menu={<MoreDropDown id={book.id.toString()} onClickFn={()=>{setActiveDDId(book.id.toString())}} list={[{title : 'Delete', onClickFn : handleBookDeleteClick.bind(null, book.id)}]} />} 
+                      title={<EditableInput value={book.title} updateFn={handleGridTitleBlur.bind(null, book.id)} />}>
                           <Table columns={formatColumns(data?.columns?.columns)} data={[...book.historys?.map((history)=>(
                             historyToObject(history.columnDatas)
                           )), getDefaultDataForAdd(data?.columns?.columns.length, data?.columns?.columns)]} 
@@ -383,6 +391,7 @@ const handleBookDeleteClick = useCallback((bookId : number)=>{
           </main>
         </div>
       </div>
+      </ActiveContext.Provider>
     </>
   );
 }
